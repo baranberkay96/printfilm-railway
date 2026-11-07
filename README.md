@@ -1,5 +1,7 @@
 # Deploy and Host PRINTFILM with Railway
 
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/printfilm-v03-ai-short-video-and-drama-s?referralCode=20H68q)
+
 PRINTFILM is an open-source (MIT) studio for AI short videos and AI short dramas: it turns a topic or a script into a storyboard, generates the shot images and video clips, and composes the final cut with FFmpeg. This community template runs PRINTFILM v0.3.0 with its API, user web app, admin console, PostgreSQL and Redis.
 
 ## About Hosting PRINTFILM
