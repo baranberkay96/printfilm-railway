@@ -1,0 +1,55 @@
+# PRINTFILM admin console on Railway (community template): public service.
+#
+# Same routes as upstream's admin/nginx.conf:
+#   /healthz        -> 200 from Caddy (Railway healthcheck; does not wait for the API)
+#   /api/*          -> API (the console uses /api/auth/* and /api/admin/*)
+#   /static/*       -> API (media previews)
+#   everything else -> the single-page console (index.html fallback)
+# The console only works for accounts with role admin: the API checks it on every /api/admin call,
+# and the first admin login is created by the API's pre-deploy step from ADMIN_EMAIL/ADMIN_PASSWORD.
+{
+	admin off
+	auto_https off
+	servers {
+		# Railway's edge reaches the service from private address space; keep its X-Forwarded-* headers.
+		trusted_proxies static private_ranges 100.64.0.0/10
+		client_ip_headers X-Forwarded-For
+	}
+}
+
+:{$PORT:8080} {
+	header {
+		-Server
+		?X-Content-Type-Options "nosniff"
+		?Referrer-Policy "same-origin"
+		?X-Frame-Options "DENY"
+		?X-Robots-Tag "noindex, nofollow"
+	}
+
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	@backend path /api/* /static/*
+	handle @backend {
+		# The largest upload upstream accepts is 40 MB; larger bodies would only fill the API's memory.
+		request_body {
+			max_size 64MB
+		}
+		reverse_proxy {$PRINTFILM_API:api.railway.internal:8000} {
+			flush_interval -1
+			lb_try_duration 30s
+		}
+	}
+
+	handle {
+		root * /srv
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		@pages not path /assets/*
+		header @pages Cache-Control "no-cache"
+		encode zstd gzip
+		try_files {path} /index.html
+		file_server
+	}
+}

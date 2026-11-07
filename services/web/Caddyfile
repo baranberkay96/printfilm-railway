@@ -1,0 +1,63 @@
+# PRINTFILM user web app on Railway (community template): public service.
+#
+# Same routes as upstream's frontend/nginx.conf:
+#   /healthz        -> 200 from Caddy (Railway healthcheck; does not wait for the API)
+#   /epay/notify    -> API /api/billing/epay/notify (payment callback; only used with Epay configured)
+#   /api/*          -> API (JSON, uploads, server-sent progress events)
+#   /static/*       -> API (generated images, videos, audio; public URLs, as upstream)
+#   everything else -> the single-page app (index.html fallback)
+# Railway's edge terminates TLS; Caddy listens on plain HTTP inside the project.
+{
+	admin off
+	auto_https off
+	servers {
+		# Railway's edge reaches the service from private address space; keep its X-Forwarded-* headers.
+		trusted_proxies static private_ranges 100.64.0.0/10
+		client_ip_headers X-Forwarded-For
+	}
+}
+
+:{$PORT:8080} {
+	header {
+		-Server
+		?X-Content-Type-Options "nosniff"
+		?Referrer-Policy "strict-origin-when-cross-origin"
+		?X-Frame-Options "SAMEORIGIN"
+	}
+
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	handle /epay/notify {
+		rewrite * /api/billing/epay/notify
+		reverse_proxy {$PRINTFILM_API:api.railway.internal:8000} {
+			lb_try_duration 30s
+		}
+	}
+
+	@backend path /api/* /static/*
+	handle @backend {
+		# The largest upload upstream accepts is 40 MB (tools); larger bodies would only fill the API's memory.
+		request_body {
+			max_size 64MB
+		}
+		reverse_proxy {$PRINTFILM_API:api.railway.internal:8000} {
+			# Stream responses as they come (progress events, video downloads), like nginx proxy_buffering off.
+			flush_interval -1
+			# Ride out an API restart or redeploy instead of answering 502 at once.
+			lb_try_duration 30s
+		}
+	}
+
+	handle {
+		root * /srv
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		@pages not path /assets/*
+		header @pages Cache-Control "no-cache"
+		encode zstd gzip
+		try_files {path} /index.html
+		file_server
+	}
+}

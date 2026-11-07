@@ -1,0 +1,47 @@
+#!/bin/sh
+# FFmpeg thread cap for PRINTFILM on Railway (community template).
+#
+# Installed as /usr/local/bin/ffmpeg, ahead of Debian's /usr/bin/ffmpeg on PATH, so every upstream
+# call (shutil.which("ffmpeg")) goes through it. FFmpeg and libx264 size their thread pools from the
+# host's CPUs (dozens on Railway's hosts), not from the service's CPU limit; extra threads only add
+# memory (x264 keeps frames per thread) and scheduling overhead. start.sh sets
+# PRINTFILM_FFMPEG_THREADS from the cgroup quota (at most 8); 0 or unset runs FFmpeg unchanged.
+#
+# With a cap N the call becomes
+#   ffmpeg -filter_threads N -filter_complex_threads N {args, "-threads N" before each -i} -threads N {output}
+# Upstream v0.3.0 always passes the output file last. When the last argument is an option, or the
+# value of -i, only the global and per-input caps are added.
+set -u
+
+real=/usr/bin/ffmpeg
+n="${PRINTFILM_FFMPEG_THREADS:-0}"
+case "$n" in
+  '' | *[!0-9]*) n=0 ;;
+esac
+if [ "$n" -eq 0 ] || [ "$#" -lt 2 ]; then
+  exec "$real" "$@"
+fi
+
+total=$#
+idx=0
+prev=
+for arg do
+  idx=$((idx + 1))
+  if [ "$idx" -eq 1 ]; then
+    set --
+  fi
+  if [ "$arg" = "-i" ]; then
+    set -- "$@" -threads "$n"
+  fi
+  if [ "$idx" -eq "$total" ] && [ "$prev" != "-i" ]; then
+    case "$arg" in
+      -) set -- "$@" -threads "$n" ;;
+      -*) ;;
+      *) set -- "$@" -threads "$n" ;;
+    esac
+  fi
+  set -- "$@" "$arg"
+  prev="$arg"
+done
+
+exec "$real" -filter_threads "$n" -filter_complex_threads "$n" "$@"
