@@ -1,10 +1,10 @@
-# PRINTFILM v0.3 AI Short Video and Drama Studio — Railway template spec
+# PRINTFILM AI Short Video and Drama Studio — Railway template spec
 
 ## Listing
 
 | Field | Value |
 |---|---|
-| Name | **PRINTFILM v0.3 AI Short Video and Drama Studio** (46 chars; `v0.3` = pinned release v0.3.0; upstream's own spelling is all caps) |
+| Name | **PRINTFILM AI Short Video and Drama Studio** (46 chars; `v0.3` = pinned release v0.3.0; upstream's own spelling is all caps) |
 | Description | AI short video and short drama studio: script to storyboard to final cut. (73 chars) |
 | Category | AI/ML |
 | Tags | printfilm, ai-video, short-video, short-drama, storyboard, seedance, seedream, ffmpeg, fastapi |

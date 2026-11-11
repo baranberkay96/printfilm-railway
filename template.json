@@ -1,330 +1,331 @@
 {
- "name": "PRINTFILM v0.3 AI Short Video and Drama Studio",
- "description": "AI short video and short drama studio: script to storyboard to final cut.",
- "category": "AI/ML",
- "tags": [
-  "printfilm",
-  "ai-video",
-  "short-video",
-  "short-drama",
-  "storyboard",
-  "seedance",
-  "seedream",
-  "ffmpeg",
-  "fastapi"
- ],
- "image": "https://cdn.jsdelivr.net/gh/yi1108/printfilm@345495e050bd0a39065c49ff6b3e87cf506a2a0d/frontend/public/favicon.svg",
- "upstream": {
-  "repo": "yi1108/printfilm",
-  "version": "v0.3.0 @ 345495e050bd0a39065c49ff6b3e87cf506a2a0d (released 2026-10-15)",
-  "source": "https://codeload.github.com/yi1108/printfilm/tar.gz/345495e050bd0a39065c49ff6b3e87cf506a2a0d, sha256 38eb5b66969a83f5e9821f6b8b0bc1ff06b335260d60f24d5c14adceaac9f568",
-  "license": "MIT",
-  "images": {
-   "api": "built from python:3.12.16-slim-bookworm@sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df + Debian ffmpeg and fonts-wqy-zenhei",
-   "web_admin_build": "node:22.23.4-alpine@sha256:0e1754758c2df4cfa3e68d59e2e1b7374bb7fd9ea6328eaaacf15cc934af8202",
-   "web_admin_runtime": "caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee",
-   "postgres": "ghcr.io/railwayapp-templates/postgres-ssl:18",
-   "redis": "redis:8.2"
+  "name": "PRINTFILM AI Short Video and Drama Studio",
+  "idSeed": "PRINTFILM v0.3 AI Short Video and Drama Studio",
+  "description": "AI short video and short drama studio: script to storyboard to final cut.",
+  "category": "AI/ML",
+  "tags": [
+    "printfilm",
+    "ai-video",
+    "short-video",
+    "short-drama",
+    "storyboard",
+    "seedance",
+    "seedream",
+    "ffmpeg",
+    "fastapi"
+  ],
+  "image": "https://cdn.jsdelivr.net/gh/yi1108/printfilm@345495e050bd0a39065c49ff6b3e87cf506a2a0d/frontend/public/favicon.svg",
+  "upstream": {
+    "repo": "yi1108/printfilm",
+    "version": "v0.3.0 @ 345495e050bd0a39065c49ff6b3e87cf506a2a0d (released 2026-10-15)",
+    "source": "https://codeload.github.com/yi1108/printfilm/tar.gz/345495e050bd0a39065c49ff6b3e87cf506a2a0d, sha256 38eb5b66969a83f5e9821f6b8b0bc1ff06b335260d60f24d5c14adceaac9f568",
+    "license": "MIT",
+    "images": {
+      "api": "built from python:3.12.16-slim-bookworm@sha256:935c3c5b12357a7e10caa9c1e6ca5692344d97cf229832ef584be2cec9fc03df + Debian ffmpeg and fonts-wqy-zenhei",
+      "web_admin_build": "node:22.23.4-alpine@sha256:0e1754758c2df4cfa3e68d59e2e1b7374bb7fd9ea6328eaaacf15cc934af8202",
+      "web_admin_runtime": "caddy:2.11.9-alpine@sha256:0bbb055bda6793c999bde78b1b5ce3e89f829fb031af2cf50056ea1246559fee",
+      "postgres": "ghcr.io/railwayapp-templates/postgres-ssl:18",
+      "redis": "redis:8.2"
+    },
+    "checked": "2026-11-07"
   },
-  "checked": "2026-11-07"
- },
- "services": {
-  "Web": {
-   "icon": "https://cdn.jsdelivr.net/gh/yi1108/printfilm@345495e050bd0a39065c49ff6b3e87cf506a2a0d/frontend/public/favicon.svg",
-   "source": {
-    "repo": "baranberkay96/printfilm-railway",
-    "rootDirectory": "/services/web"
-   },
-   "startCommand": null,
-   "preDeployCommand": null,
-   "healthcheckPath": "/healthz",
-   "healthcheckTimeout": 120,
-   "restartPolicyType": "ALWAYS",
-   "numReplicas": 1,
-   "cronSchedule": null,
-   "publicDomain": true,
-   "targetPort": 8080,
-   "tcpProxy": null,
-   "volume": null,
-   "variables": {
-    "PORT": {
-     "defaultValue": "8080",
-     "description": "Port Caddy listens on; the public domain and Railway's healthcheck (/healthz) use it.",
-     "required": false
+  "services": {
+    "Web": {
+      "icon": "https://cdn.jsdelivr.net/gh/yi1108/printfilm@345495e050bd0a39065c49ff6b3e87cf506a2a0d/frontend/public/favicon.svg",
+      "source": {
+        "repo": "baranberkay96/printfilm-railway",
+        "rootDirectory": "/services/web"
+      },
+      "startCommand": null,
+      "preDeployCommand": null,
+      "healthcheckPath": "/healthz",
+      "healthcheckTimeout": 120,
+      "restartPolicyType": "ALWAYS",
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": true,
+      "targetPort": 8080,
+      "tcpProxy": null,
+      "volume": null,
+      "variables": {
+        "PORT": {
+          "defaultValue": "8080",
+          "description": "Port Caddy listens on; the public domain and Railway's healthcheck (/healthz) use it.",
+          "required": false
+        },
+        "PRINTFILM_API": {
+          "defaultValue": "${{API.RAILWAY_PRIVATE_DOMAIN}}:${{API.PORT}}",
+          "description": "Private host:port of the API service; /api/*, /static/* and /epay/notify are forwarded there.",
+          "required": false
+        }
+      }
     },
-    "PRINTFILM_API": {
-     "defaultValue": "${{API.RAILWAY_PRIVATE_DOMAIN}}:${{API.PORT}}",
-     "description": "Private host:port of the API service; /api/*, /static/* and /epay/notify are forwarded there.",
-     "required": false
+    "Admin": {
+      "icon": "https://cdn.jsdelivr.net/npm/lucide-static@1.59.0/icons/shield-check.svg",
+      "source": {
+        "repo": "baranberkay96/printfilm-railway",
+        "rootDirectory": "/services/admin"
+      },
+      "startCommand": null,
+      "preDeployCommand": null,
+      "healthcheckPath": "/healthz",
+      "healthcheckTimeout": 120,
+      "restartPolicyType": "ALWAYS",
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": true,
+      "targetPort": 8080,
+      "tcpProxy": null,
+      "volume": null,
+      "variables": {
+        "PORT": {
+          "defaultValue": "8080",
+          "description": "Port Caddy listens on; the public domain and Railway's healthcheck (/healthz) use it.",
+          "required": false
+        },
+        "PRINTFILM_API": {
+          "defaultValue": "${{API.RAILWAY_PRIVATE_DOMAIN}}:${{API.PORT}}",
+          "description": "Private host:port of the API service; /api/* and /static/* are forwarded there.",
+          "required": false
+        }
+      }
+    },
+    "API": {
+      "icon": "https://cdn.jsdelivr.net/npm/lucide-static@1.59.0/icons/clapperboard.svg",
+      "source": {
+        "repo": "baranberkay96/printfilm-railway",
+        "rootDirectory": "/services/api"
+      },
+      "startCommand": null,
+      "preDeployCommand": "/app/railway/start.sh predeploy",
+      "preDeployTimeoutSeconds": 900,
+      "healthcheckPath": "/api/health",
+      "healthcheckTimeout": 600,
+      "restartPolicyType": "ALWAYS",
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": false,
+      "targetPort": null,
+      "tcpProxy": null,
+      "volume": {
+        "mountPath": "/app/static/generated"
+      },
+      "variables": {
+        "PORT": {
+          "defaultValue": "8000",
+          "description": "API port (one dual-stack socket on ::). Railway's healthcheck calls /api/health here.",
+          "required": false
+        },
+        "TOKENFREE_API_KEY": {
+          "defaultValue": "",
+          "description": "Optional at deploy, needed to generate: TokenFree API key (sk-...) for scripts, images, video and voice. Can be added later in Admin -> System settings -> Models.",
+          "required": false
+        },
+        "ADMIN_EMAIL": {
+          "defaultValue": "admin@example.com",
+          "description": "Login of the admin account the pre-deploy step creates (also signs in to the studio). An invalid address falls back to admin@example.com.",
+          "required": false
+        },
+        "ADMIN_PASSWORD": {
+          "defaultValue": "${{secret(32, \"abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789\")}}",
+          "description": "Admin password, generated (12+ characters). Applied on every deploy, so a password changed in the app is reset to this value.",
+          "required": false
+        },
+        "SECRET_KEY": {
+          "defaultValue": "${{secret(64, \"abcdef0123456789\")}}",
+          "description": "Signs logins and encrypts the saved TokenFree key; generated. Changing it signs everyone out and makes saved keys unreadable.",
+          "required": false
+        },
+        "PRINTFILM_SIGNUP_ENABLED": {
+          "defaultValue": "false",
+          "description": "true lets anyone who opens the site register. Off by default: every account generates on your TokenFree key unless billing is on.",
+          "required": false
+        },
+        "PRINTFILM_PUBLIC_MEDIA_URLS": {
+          "defaultValue": "true",
+          "description": "Hand Seedance local media as https://{web-domain}/static/... URLs while Aliyun OSS is off (needed for video from uploaded or older images). false = upstream behaviour.",
+          "required": false
+        },
+        "PRINTFILM_FFMPEG_THREADS": {
+          "defaultValue": "auto",
+          "description": "FFmpeg threads per process: auto = the service's CPU limit (max 8), a number to set it, 0 = FFmpeg's own choice (host CPU count).",
+          "required": false
+        },
+        "PUBLIC_BASE_URL": {
+          "defaultValue": "https://${{Web.RAILWAY_PUBLIC_DOMAIN}}",
+          "description": "Public address of the studio (reset links, media URLs). Read on the first start only; afterwards change it in Admin -> System settings -> Site.",
+          "required": false
+        },
+        "CORS_ORIGINS": {
+          "defaultValue": "https://${{Web.RAILWAY_PUBLIC_DOMAIN}},https://${{Admin.RAILWAY_PUBLIC_DOMAIN}}",
+          "description": "Origins allowed to call the API from a browser (both fronts are same-origin proxies; add a custom domain here if you call the API directly).",
+          "required": false
+        },
+        "MODEL_LLM": {
+          "defaultValue": "kimi-k2.6",
+          "description": "Default text model on the first start (upstream's Docker default); afterwards chosen in Admin -> System settings -> Models.",
+          "required": false
+        },
+        "MODEL_IMAGE": {
+          "defaultValue": "seedream-5-0-pro",
+          "description": "Default image model on the first start (upstream's Docker default); afterwards chosen in the admin console.",
+          "required": false
+        },
+        "MODEL_VIDEO": {
+          "defaultValue": "seedance-2-5",
+          "description": "Default video model on the first start (upstream's Docker default); afterwards chosen in the admin console.",
+          "required": false
+        },
+        "DATABASE_URL": {
+          "defaultValue": "${{Postgres.DATABASE_URL}}",
+          "description": "PostgreSQL over the private network; start.sh turns it into upstream's postgresql+asyncpg / psycopg2 URLs.",
+          "required": false
+        },
+        "REDIS_URL": {
+          "defaultValue": "${{Redis.REDIS_URL}}",
+          "description": "Redis over the private network: live progress events and password-reset tokens.",
+          "required": false
+        },
+        "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
+          "defaultValue": "30",
+          "description": "Seconds a redeploy gives the API to stop its task runtime cleanly; unfinished jobs are picked up again after the restart.",
+          "required": false
+        }
+      }
+    },
+    "Postgres": {
+      "icon": "https://devicons.railway.app/i/postgresql.svg",
+      "source": {
+        "image": "ghcr.io/railwayapp-templates/postgres-ssl:18"
+      },
+      "startCommand": null,
+      "preDeployCommand": null,
+      "healthcheckPath": null,
+      "healthcheckTimeout": null,
+      "restartPolicyType": "ON_FAILURE",
+      "restartPolicyMaxRetries": 10,
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": false,
+      "targetPort": null,
+      "tcpProxy": null,
+      "volume": {
+        "mountPath": "/var/lib/postgresql/data"
+      },
+      "variables": {
+        "PGDATA": {
+          "defaultValue": "/var/lib/postgresql/data/pgdata",
+          "description": "Location where the database will be initialized",
+          "required": true
+        },
+        "PGHOST": {
+          "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
+          "description": "Railway Private Domain Name.",
+          "required": true
+        },
+        "PGPORT": {
+          "defaultValue": "5432",
+          "description": "Port to connect to Postgres.",
+          "required": true
+        },
+        "PGUSER": {
+          "defaultValue": "${{ POSTGRES_USER }}",
+          "description": "Required variable for Data panel",
+          "required": true
+        },
+        "PGDATABASE": {
+          "defaultValue": "${{POSTGRES_DB}}",
+          "description": "Required variable for the data panel.",
+          "required": true
+        },
+        "PGPASSWORD": {
+          "defaultValue": "${{POSTGRES_PASSWORD}}",
+          "description": "Required variable for Data panel",
+          "required": true
+        },
+        "POSTGRES_DB": {
+          "defaultValue": "railway",
+          "description": "Database created on first boot; PRINTFILM creates its tables here (pre-deploy and at API start).",
+          "required": true
+        },
+        "DATABASE_URL": {
+          "defaultValue": "postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}",
+          "description": "Private connection string; the API references it.",
+          "required": true
+        },
+        "POSTGRES_USER": {
+          "defaultValue": "postgres",
+          "description": "User to connect to Postgres DB",
+          "required": true
+        },
+        "SSL_CERT_DAYS": {
+          "defaultValue": "820",
+          "description": "SSL certificate expiry in days.",
+          "required": false
+        },
+        "POSTGRES_PASSWORD": {
+          "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
+          "description": "Superuser password, generated at deploy (letters only, so it is safe inside DATABASE_URL).",
+          "required": true
+        },
+        "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
+          "defaultValue": "60",
+          "description": "Allow Postgres to cleanly shut down",
+          "required": true
+        }
+      }
+    },
+    "Redis": {
+      "icon": "https://cdn.sanity.io/images/sy1jschh/production/0ce0bfdcfbdbf69662b1116671f97c2dd788b655-157x157.svg",
+      "source": {
+        "image": "redis:8.2"
+      },
+      "startCommand": "/bin/sh -c \"rm -rf $RAILWAY_VOLUME_MOUNT_PATH/lost+found/ && exec docker-entrypoint.sh redis-server --requirepass $REDIS_PASSWORD --save 60 1 --dir $RAILWAY_VOLUME_MOUNT_PATH --maxmemory 512mb --maxmemory-policy allkeys-lru\"",
+      "preDeployCommand": null,
+      "healthcheckPath": null,
+      "healthcheckTimeout": null,
+      "restartPolicyType": "ON_FAILURE",
+      "restartPolicyMaxRetries": 10,
+      "numReplicas": 1,
+      "cronSchedule": null,
+      "publicDomain": false,
+      "targetPort": null,
+      "tcpProxy": null,
+      "volume": {
+        "mountPath": "/data"
+      },
+      "variables": {
+        "REDISHOST": {
+          "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
+          "description": "Private network hostname of the Redis service, only resolvable from services in the same environment",
+          "required": true
+        },
+        "REDISPORT": {
+          "defaultValue": "6379",
+          "description": "Port that Redis listens on",
+          "required": true
+        },
+        "REDISUSER": {
+          "defaultValue": "default",
+          "description": "Username for authenticating with Redis",
+          "required": true
+        },
+        "REDIS_URL": {
+          "defaultValue": "redis://${{ REDISUSER }}:${{ REDIS_PASSWORD }}@${{ REDISHOST }}:${{ REDISPORT }}",
+          "description": "Connection string for connecting to Redis using the private network",
+          "required": true
+        },
+        "REDISPASSWORD": {
+          "defaultValue": "${{REDIS_PASSWORD}}",
+          "description": "Alias of REDIS_PASSWORD for clients that expect the unseparated name",
+          "required": true
+        },
+        "REDIS_PASSWORD": {
+          "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
+          "description": "Randomly generated password for authenticating with Redis",
+          "required": true
+        }
+      }
     }
-   }
-  },
-  "Admin": {
-   "icon": "https://cdn.jsdelivr.net/npm/lucide-static@1.59.0/icons/shield-check.svg",
-   "source": {
-    "repo": "baranberkay96/printfilm-railway",
-    "rootDirectory": "/services/admin"
-   },
-   "startCommand": null,
-   "preDeployCommand": null,
-   "healthcheckPath": "/healthz",
-   "healthcheckTimeout": 120,
-   "restartPolicyType": "ALWAYS",
-   "numReplicas": 1,
-   "cronSchedule": null,
-   "publicDomain": true,
-   "targetPort": 8080,
-   "tcpProxy": null,
-   "volume": null,
-   "variables": {
-    "PORT": {
-     "defaultValue": "8080",
-     "description": "Port Caddy listens on; the public domain and Railway's healthcheck (/healthz) use it.",
-     "required": false
-    },
-    "PRINTFILM_API": {
-     "defaultValue": "${{API.RAILWAY_PRIVATE_DOMAIN}}:${{API.PORT}}",
-     "description": "Private host:port of the API service; /api/* and /static/* are forwarded there.",
-     "required": false
-    }
-   }
-  },
-  "API": {
-   "icon": "https://cdn.jsdelivr.net/npm/lucide-static@1.59.0/icons/clapperboard.svg",
-   "source": {
-    "repo": "baranberkay96/printfilm-railway",
-    "rootDirectory": "/services/api"
-   },
-   "startCommand": null,
-   "preDeployCommand": "/app/railway/start.sh predeploy",
-   "preDeployTimeoutSeconds": 900,
-   "healthcheckPath": "/api/health",
-   "healthcheckTimeout": 600,
-   "restartPolicyType": "ALWAYS",
-   "numReplicas": 1,
-   "cronSchedule": null,
-   "publicDomain": false,
-   "targetPort": null,
-   "tcpProxy": null,
-   "volume": {
-    "mountPath": "/app/static/generated"
-   },
-   "variables": {
-    "PORT": {
-     "defaultValue": "8000",
-     "description": "API port (one dual-stack socket on ::). Railway's healthcheck calls /api/health here.",
-     "required": false
-    },
-    "TOKENFREE_API_KEY": {
-     "defaultValue": "",
-     "description": "Optional at deploy, needed to generate: TokenFree API key (sk-...) for scripts, images, video and voice. Can be added later in Admin -> System settings -> Models.",
-     "required": false
-    },
-    "ADMIN_EMAIL": {
-     "defaultValue": "admin@example.com",
-     "description": "Login of the admin account the pre-deploy step creates (also signs in to the studio). An invalid address falls back to admin@example.com.",
-     "required": false
-    },
-    "ADMIN_PASSWORD": {
-     "defaultValue": "${{secret(32, \"abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789\")}}",
-     "description": "Admin password, generated (12+ characters). Applied on every deploy, so a password changed in the app is reset to this value.",
-     "required": false
-    },
-    "SECRET_KEY": {
-     "defaultValue": "${{secret(64, \"abcdef0123456789\")}}",
-     "description": "Signs logins and encrypts the saved TokenFree key; generated. Changing it signs everyone out and makes saved keys unreadable.",
-     "required": false
-    },
-    "PRINTFILM_SIGNUP_ENABLED": {
-     "defaultValue": "false",
-     "description": "true lets anyone who opens the site register. Off by default: every account generates on your TokenFree key unless billing is on.",
-     "required": false
-    },
-    "PRINTFILM_PUBLIC_MEDIA_URLS": {
-     "defaultValue": "true",
-     "description": "Hand Seedance local media as https://{web-domain}/static/... URLs while Aliyun OSS is off (needed for video from uploaded or older images). false = upstream behaviour.",
-     "required": false
-    },
-    "PRINTFILM_FFMPEG_THREADS": {
-     "defaultValue": "auto",
-     "description": "FFmpeg threads per process: auto = the service's CPU limit (max 8), a number to set it, 0 = FFmpeg's own choice (host CPU count).",
-     "required": false
-    },
-    "PUBLIC_BASE_URL": {
-     "defaultValue": "https://${{Web.RAILWAY_PUBLIC_DOMAIN}}",
-     "description": "Public address of the studio (reset links, media URLs). Read on the first start only; afterwards change it in Admin -> System settings -> Site.",
-     "required": false
-    },
-    "CORS_ORIGINS": {
-     "defaultValue": "https://${{Web.RAILWAY_PUBLIC_DOMAIN}},https://${{Admin.RAILWAY_PUBLIC_DOMAIN}}",
-     "description": "Origins allowed to call the API from a browser (both fronts are same-origin proxies; add a custom domain here if you call the API directly).",
-     "required": false
-    },
-    "MODEL_LLM": {
-     "defaultValue": "kimi-k2.6",
-     "description": "Default text model on the first start (upstream's Docker default); afterwards chosen in Admin -> System settings -> Models.",
-     "required": false
-    },
-    "MODEL_IMAGE": {
-     "defaultValue": "seedream-5-0-pro",
-     "description": "Default image model on the first start (upstream's Docker default); afterwards chosen in the admin console.",
-     "required": false
-    },
-    "MODEL_VIDEO": {
-     "defaultValue": "seedance-2-5",
-     "description": "Default video model on the first start (upstream's Docker default); afterwards chosen in the admin console.",
-     "required": false
-    },
-    "DATABASE_URL": {
-     "defaultValue": "${{Postgres.DATABASE_URL}}",
-     "description": "PostgreSQL over the private network; start.sh turns it into upstream's postgresql+asyncpg / psycopg2 URLs.",
-     "required": false
-    },
-    "REDIS_URL": {
-     "defaultValue": "${{Redis.REDIS_URL}}",
-     "description": "Redis over the private network: live progress events and password-reset tokens.",
-     "required": false
-    },
-    "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
-     "defaultValue": "30",
-     "description": "Seconds a redeploy gives the API to stop its task runtime cleanly; unfinished jobs are picked up again after the restart.",
-     "required": false
-    }
-   }
-  },
-  "Postgres": {
-   "icon": "https://devicons.railway.app/i/postgresql.svg",
-   "source": {
-    "image": "ghcr.io/railwayapp-templates/postgres-ssl:18"
-   },
-   "startCommand": null,
-   "preDeployCommand": null,
-   "healthcheckPath": null,
-   "healthcheckTimeout": null,
-   "restartPolicyType": "ON_FAILURE",
-   "restartPolicyMaxRetries": 10,
-   "numReplicas": 1,
-   "cronSchedule": null,
-   "publicDomain": false,
-   "targetPort": null,
-   "tcpProxy": null,
-   "volume": {
-    "mountPath": "/var/lib/postgresql/data"
-   },
-   "variables": {
-    "PGDATA": {
-     "defaultValue": "/var/lib/postgresql/data/pgdata",
-     "description": "Location where the database will be initialized",
-     "required": true
-    },
-    "PGHOST": {
-     "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
-     "description": "Railway Private Domain Name.",
-     "required": true
-    },
-    "PGPORT": {
-     "defaultValue": "5432",
-     "description": "Port to connect to Postgres.",
-     "required": true
-    },
-    "PGUSER": {
-     "defaultValue": "${{ POSTGRES_USER }}",
-     "description": "Required variable for Data panel",
-     "required": true
-    },
-    "PGDATABASE": {
-     "defaultValue": "${{POSTGRES_DB}}",
-     "description": "Required variable for the data panel.",
-     "required": true
-    },
-    "PGPASSWORD": {
-     "defaultValue": "${{POSTGRES_PASSWORD}}",
-     "description": "Required variable for Data panel",
-     "required": true
-    },
-    "POSTGRES_DB": {
-     "defaultValue": "railway",
-     "description": "Database created on first boot; PRINTFILM creates its tables here (pre-deploy and at API start).",
-     "required": true
-    },
-    "DATABASE_URL": {
-     "defaultValue": "postgresql://${{PGUSER}}:${{POSTGRES_PASSWORD}}@${{RAILWAY_PRIVATE_DOMAIN}}:5432/${{PGDATABASE}}",
-     "description": "Private connection string; the API references it.",
-     "required": true
-    },
-    "POSTGRES_USER": {
-     "defaultValue": "postgres",
-     "description": "User to connect to Postgres DB",
-     "required": true
-    },
-    "SSL_CERT_DAYS": {
-     "defaultValue": "820",
-     "description": "SSL certificate expiry in days.",
-     "required": false
-    },
-    "POSTGRES_PASSWORD": {
-     "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
-     "description": "Superuser password, generated at deploy (letters only, so it is safe inside DATABASE_URL).",
-     "required": true
-    },
-    "RAILWAY_DEPLOYMENT_DRAINING_SECONDS": {
-     "defaultValue": "60",
-     "description": "Allow Postgres to cleanly shut down",
-     "required": true
-    }
-   }
-  },
-  "Redis": {
-   "icon": "https://cdn.sanity.io/images/sy1jschh/production/0ce0bfdcfbdbf69662b1116671f97c2dd788b655-157x157.svg",
-   "source": {
-    "image": "redis:8.2"
-   },
-   "startCommand": "/bin/sh -c \"rm -rf $RAILWAY_VOLUME_MOUNT_PATH/lost+found/ && exec docker-entrypoint.sh redis-server --requirepass $REDIS_PASSWORD --save 60 1 --dir $RAILWAY_VOLUME_MOUNT_PATH --maxmemory 512mb --maxmemory-policy allkeys-lru\"",
-   "preDeployCommand": null,
-   "healthcheckPath": null,
-   "healthcheckTimeout": null,
-   "restartPolicyType": "ON_FAILURE",
-   "restartPolicyMaxRetries": 10,
-   "numReplicas": 1,
-   "cronSchedule": null,
-   "publicDomain": false,
-   "targetPort": null,
-   "tcpProxy": null,
-   "volume": {
-    "mountPath": "/data"
-   },
-   "variables": {
-    "REDISHOST": {
-     "defaultValue": "${{RAILWAY_PRIVATE_DOMAIN}}",
-     "description": "Private network hostname of the Redis service, only resolvable from services in the same environment",
-     "required": true
-    },
-    "REDISPORT": {
-     "defaultValue": "6379",
-     "description": "Port that Redis listens on",
-     "required": true
-    },
-    "REDISUSER": {
-     "defaultValue": "default",
-     "description": "Username for authenticating with Redis",
-     "required": true
-    },
-    "REDIS_URL": {
-     "defaultValue": "redis://${{ REDISUSER }}:${{ REDIS_PASSWORD }}@${{ REDISHOST }}:${{ REDISPORT }}",
-     "description": "Connection string for connecting to Redis using the private network",
-     "required": true
-    },
-    "REDISPASSWORD": {
-     "defaultValue": "${{REDIS_PASSWORD}}",
-     "description": "Alias of REDIS_PASSWORD for clients that expect the unseparated name",
-     "required": true
-    },
-    "REDIS_PASSWORD": {
-     "defaultValue": "${{ secret(32, \"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ\") }}",
-     "description": "Randomly generated password for authenticating with Redis",
-     "required": true
-    }
-   }
   }
- }
 }
